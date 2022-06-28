@@ -21,3 +21,42 @@ def scan():
     cursor.close()
     return output_formatter(results)
         
+
+def select_by_id(id):
+    cursor = get_db().execute(
+        "SELECT * FROM user WHERE id=? AND ACTIVE=1", (id, )
+    )
+    results = cursor.fetchall()
+    cursor.close() # close DB connection
+    return output_formatter(results)
+
+def insert(data):
+    """ Create a new record in the User table """
+
+    query = """
+    INSERT INTO user (
+        first_name, 
+        last_name, 
+        hobbies
+    ) VALUES (?, ?, ?)
+    """
+
+    values = (
+        data.get("first_name"),
+        data.get("last_name"),
+        data.get("hobbies")
+    )
+
+    cursor = get_db()
+    cursor.execute(query, values)
+    cursor.commit()
+    cursor.close()
+
+
+
+#SQL:
+#UPDATE user set active=0 WHERE id=?
+def deactivate(id):
+    ""
+    cursor = get_db()
+    cursor.execute("UPDATE user set active=0 WHERE id=?", (id))
